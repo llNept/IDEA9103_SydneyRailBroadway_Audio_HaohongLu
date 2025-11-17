@@ -297,3 +297,143 @@ function drawMondrianTown() {
     rect(r.x, r.y, r.w, r.h);
   }
 }
+
+// High-frequency particles that move inside the town area.
+let highParticles = [];
+let mondrianParticleColors = [
+  mondrianRed, mondrianBlue, mondrianYellow, mondrianWhite
+];
+
+// Each particle has a position, a small velocity and a size.
+function initHighParticles() {
+  highParticles = [];
+
+  // Compute a simple bounding box from the town outline
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (let p of townOutline) {
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.y > maxY) maxY = p.y;
+  }
+
+  let count = 50;
+
+  for (let i = 0; i < count; i++) {
+    let particle = spawnHighParticle(minX, maxX, minY, maxY);
+    highParticles.push(particle);
+  }
+}
+
+// Create a single particle inside the town outline
+function spawnHighParticle(minX, maxX, minY, maxY) {
+  let x, y;
+
+  // Try random positions until one falls inside the polygon
+  for (let k = 0; k < 40; k++) {
+    x = random(minX, maxX);
+    y = random(minY, maxY);
+    if (pointInPoly(x, y, townOutline)) {
+      break;
+    }
+  }
+
+  // Random movement direction
+  let angle = random(TWO_PI);
+  let baseSpeed = random(0.3, 0.8);
+
+  return {
+    x: x,
+    y: y,
+    vx: cos(angle) * baseSpeed,
+    vy: sin(angle) * baseSpeed,
+    size: random(2, 4),
+    color: random(mondrianParticleColors)
+  };
+}
+
+// Update all high-frequency particles every frame.
+function updateHighParticles() {
+  if (highParticles.length === 0) return;
+
+  // Base speed that is always present
+  let baseSpeedScale = 0.2;
+
+  // Extra speed driven by high frequencies (audioHigh)
+  let audioFactor = 0;
+  if (typeof audioHigh !== "undefined" &&
+      typeof audioStarted !== "undefined" &&
+      typeof audioPaused !== "undefined") {
+
+    if (audioStarted && !audioPaused) {
+      audioFactor = audioHigh;
+    }
+  }
+
+  // Final movement scale: High frequencies make particles move faster
+  let speedScale = baseSpeedScale + audioFactor * 2.0;
+
+  // Bounding box for safety respawn
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (let p of townOutline) {
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.y > maxY) maxY = p.y;
+  }
+
+  for (let i = 0; i < highParticles.length; i++) {
+    let h = highParticles[i];
+
+    // Add small random jitter
+    h.vx += random(-0.05, 0.05);
+    h.vy += random(-0.05, 0.05);
+
+    // Clamp velocity length
+    let speed = sqrt(h.vx * h.vx + h.vy * h.vy);
+    let maxSpeed = 1.5;
+    if (speed > maxSpeed) {
+      h.vx = (h.vx / speed) * maxSpeed;
+      h.vy = (h.vy / speed) * maxSpeed;
+    }
+
+    // Try the next position
+    let nextX = h.x + h.vx * speedScale;
+    let nextY = h.y + h.vy * speedScale;
+
+    if (pointInPoly(nextX, nextY, townOutline)) {
+      // Still inside town, accept new position
+      h.x = nextX;
+      h.y = nextY;
+    } else {
+      // Hit the outline: Bounce back and change to a new color
+      h.vx *= -1;
+      h.vy *= -1;
+      h.color = random(mondrianParticleColors);
+
+      // Second attempt after bounce
+      nextX = h.x + h.vx * speedScale;
+      nextY = h.y + h.vy * speedScale;
+
+      if (pointInPoly(nextX, nextY, townOutline)) {
+        h.x = nextX;
+        h.y = nextY;
+      } else {
+        // Safety: If still outside, respawn inside the polygon
+        let newParticle = spawnHighParticle(minX, maxX, minY, maxY);
+        highParticles[i] = newParticle;
+      }
+    }
+  }
+}
+
+// Draw the high-frequency particles on top of the town area.
+function drawHighParticles() {
+  if (highParticles.length === 0) return;
+
+  noStroke();
+  for (let h of highParticles) {
+    fill(h.color);
+    circle(h.x, h.y, h.size);
+  }
+}

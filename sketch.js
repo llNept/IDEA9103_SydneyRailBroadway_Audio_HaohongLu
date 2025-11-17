@@ -24,7 +24,9 @@ function setup() {
   initTownGrid();
   initOutlineBlocks();
   initGridBlocks();
+  
   initMondrianTown();
+  initHighParticles(); 
 
   initCars();
 }
@@ -63,6 +65,10 @@ function draw() {
 
   // 2) Mondrian Town
   drawMondrianTown();
+
+  updateHighParticles();
+  drawHighParticles();
+
   drawTownGrid();
   drawGridBlocks();
   drawTownOutline();
