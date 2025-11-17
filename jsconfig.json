@@ -1,0 +1,14 @@
+
+{
+  "compilerOptions": {
+    "target": "es6",
+    "checkJs": false
+  },
+  "typeAcquisition": {
+    "include": ["p5"]
+  },
+  "include": [
+    "*.js",
+    "**/*.js"
+  ]
+}
