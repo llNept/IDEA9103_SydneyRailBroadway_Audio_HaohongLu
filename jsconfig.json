@@ -2,7 +2,9 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "checkJs": false
+    "checkJs": false,
+    "allowJs": true,
+    "module": "es6"
   },
   "typeAcquisition": {
     "include": ["p5"]
