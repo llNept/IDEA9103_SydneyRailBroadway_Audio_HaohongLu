@@ -29,6 +29,8 @@ function setup() {
   initHighParticles(); 
 
   initCars();
+
+  console.log("CityCircle Center =", cityCircleCenterX, cityCircleCenterY);
 }
 
 function mousePressed() {
@@ -77,6 +79,9 @@ function draw() {
   // 3) Rails & Stations
   drawRails();
   drawStations();
+
+  // Mic-driven ripple waves from City Circle
+  drawMicRipples();
 
   // 4) Car Animation
   advanceCars();
@@ -162,4 +167,3 @@ function drawAudioDebugPanel() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
-
