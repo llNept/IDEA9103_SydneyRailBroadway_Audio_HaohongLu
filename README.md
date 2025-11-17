@@ -8,7 +8,7 @@
 
 This project is an interactive audio-reactive artwork built with p5.js, combining the structure of the Sydney train map with a Mondrian-inspired city layout. The entire scene reacts dynamically to both music playback and live microphone input, allowing sound to directly influence movement, color, and visual energy across the composition.
 
-My work focuses on building an major audio-driven animation system that analyzes frequency bands in real time and injects motion into specific parts of the city. The goal is to treat the city as a living system where rhythm and behavior emerge from sound.
+The work focuses on building an major audio-driven animation system that analyzes frequency bands in real time and injects motion into specific parts of the city. The goal is to treat the city as a living system where rhythm and behavior emerge from sound.
 
 The music comes from my own production which may basically fit the energy of the city, so there won't be any copyright probelms at all.
 
@@ -51,7 +51,7 @@ audioSpeedFactor = minSpeed + diffNorm * (maxSpeed - minSpeed);
 (2) Mid Frequency (250–2000 Hz) --> **Rail Brightness** --> 2RaimMap.js
 
 Mid frequencies contain the core presence of music—melodies, vocals, and the main harmonic body.
-I mapped this band to the brightness of the rail lines, making the Sydney train network subtly glow and shimmer in response to the music.
+This band is maaped to the brightness of the rail lines, making the Sydney train network subtly glow and shimmer in response to the music.
 
 When the mid band rises, the rails become noticeably lighter, creating a gentle pulse across the map.
 This visual change represents how cultural energy and social activity travel through a city’s infrastructure, brightening and fading like a rhythmic flow of movement and attention.
@@ -66,7 +66,7 @@ let mappedColor = lerpColor(baseColorObj, color(255), brightnessAmount);
 (3) High Frequency (2000–10000 Hz) --> **Town Particles** --> 3MondrianTown.js
 
 High frequencies feel sharp and detailed.
-To express that quality, I created a particle system inside the Mondrian Town.
+To express that shift, a particle system is created inside the Mondrian Town.
 
 Particles move faster when treble energy increases. They bounce off the outline and change color on impact. Movement is random but guided by a speed scale from the FFT. This gives the town an internal sense of activity and spontaneity.
 
