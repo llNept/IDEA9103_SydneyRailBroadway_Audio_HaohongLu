@@ -19,7 +19,7 @@ let trackFFT   = null;
 let audioLevel = 0;
 let audioLow   = 0;
 let audioMid   = 0;
-let audioHigh  = 0;
+let audioHigh  = 0; 
 
 // Used by the car system in 4CarAnimation.js
 let audioSpeedFactor = 1.0;
@@ -30,15 +30,15 @@ let audioPaused  = false;
 
 // Called in global preload()
 function preloadAudioSystem() {
-  console.log("preloadAudioSystem: loading assets/Resurgence.wav");
+  console.log("preloadAudioSystem: Loading assets/Resurgence.wav");
 
   trackSound = loadSound(
     "assets/Resurgence.wav",
     () => {
-      console.log("preloadAudioSystem: sound loaded");
+      console.log("preloadAudioSystem: Sound loaded");
     },
     (err) => {
-      console.log("preloadAudioSystem: FAILED to load sound", err);
+      console.log("preloadAudioSystem: Failed to load sound", err);
     }
   );
 }
@@ -50,7 +50,7 @@ function initAudioSystem() {
 
 // First-time start, called from mousePressed()
 function startAudioSystem() {
-  console.log("startAudioSystem called");
+  console.log("startAudioSystem Called");
 
   userStartAudio();
 

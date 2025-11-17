@@ -14,6 +14,28 @@
 const original_W = 600;
 const original_H = 500;
 
+// Returns a color brightened based on the mid band (audioMid).
+function getMidBrightColor(baseColor) {
+  if (typeof audioMid === "undefined") {
+    return baseColor;
+  }
+
+  // When paused, return the original color。)
+  if (audioPaused || !audioStarted) {
+    return color(baseColor);
+  }
+
+  let baseColorObj = color(baseColor);
+
+  // Controls Brightness Intensity
+  let brightnessAmount = pow(audioMid, 1.2) * 1.1 - 0.1;
+  brightnessAmount = constrain(brightnessAmount, 0, 1);
+
+  // Interpolate baseColor towards white
+  let mappedColor = lerpColor(baseColorObj, color(255), brightnessAmount);
+  return mappedColor;
+}
+
 // Style
 let stroke_W = 1;
 let dot_R = 6;
@@ -189,11 +211,16 @@ function drawStations() {
   fill(c_Gray); circle(50,380, dot_R); circle(70,210, dot_R);
 }
 
-function drawPolyline(points, color) {
+function drawPolyline(points, baseColor) {
   if (!points || points.length < 2) return;
-  stroke(color);
+
+  // Apply mid-frequency brightness shaping
+  let brightenedColor = getMidBrightColor(baseColor);
+
+  stroke(brightenedColor);
   for (let i = 0; i < points.length - 1; i++) {
-    let a = points[i], b = points[i + 1];
-    line(a.x, a.y, b.x, b.y);
+    let startPoint = points[i];
+    let endPoint   = points[i + 1];
+    line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
   }
 }
